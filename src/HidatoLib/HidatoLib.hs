@@ -33,6 +33,7 @@ setValue = B.setValue
 newValue = B.newValue
 solve = S.solve
 gameGenerator = GG.gameGenerator
+rotateBoardN = B.rotateBoardN
 
 type Graph = G.Graph
 type BoardTile = B.BoardTile
