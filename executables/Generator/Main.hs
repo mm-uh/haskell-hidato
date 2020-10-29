@@ -7,7 +7,8 @@ import Data.Semigroup ((<>))
 import Options.Applicative
 
 data Opts = Opts
-    {  	template   :: !String,
+    {  	
+    template   :: !String,
 	board_name :: !String,
 	rotate     :: Int
     }
@@ -20,10 +21,10 @@ main = do
     let fileName = template opts 
     let name = board_name opts 
     board <- parseBoard fileName
-    let boardRotated = rotateBoardN board $ rotate opts
-    numberedBoard <- gameGenerator boardRotated
-    putStrLn $ printBoard numberedBoard
-    writeFile name $ printBoard numberedBoard
+    numberedBoard <- gameGenerator board
+    let boardRotated = rotateBoardN numberedBoard $ rotate opts
+    putStrLn $ printBoard boardRotated
+    writeFile name $ printBoard boardRotated
     
 optsParser :: ParserInfo Opts
 optsParser =
