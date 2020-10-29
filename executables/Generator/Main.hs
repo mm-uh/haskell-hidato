@@ -20,7 +20,8 @@ main = do
     let fileName = template opts 
     let name = board_name opts 
     board <- parseBoard fileName
-    numberedBoard <- gameGenerator board
+    let boardRotated = rotateBoardN board $ rotate opts
+    numberedBoard <- gameGenerator boardRotated
     putStrLn $ printBoard numberedBoard
     writeFile name $ printBoard numberedBoard
     
