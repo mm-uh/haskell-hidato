@@ -203,8 +203,10 @@ rotateBoard board = Board (V.fromList [r V.! i  | i <- (enumFromThenTo (rowLen-1
         rows = divideVector tiles rowLen 
     
 rotateBoardN :: Board -> Int -> Board
-rotateBoardN b 0 = b
-rotateBoardN b x = rotateBoardN (rotateBoard b) (x-1)
+rotateBoardN b x 
+    | mod x 4 == 0 = b
+    | otherwise = rotateBoardN (rotateBoard b) (x-1)
+
         
 
 
