@@ -202,6 +202,9 @@ rotateBoard board = Board (V.fromList [r V.! i  | i <- (enumFromThenTo (rowLen-1
         colLen = div (V.length tiles) rowLen
         rows = divideVector tiles rowLen 
     
+rotateBoardN :: Board -> Int -> Board
+rotateBoardN b 0 = b
+rotateBoardN b x = rotateBoardN (rotateBoard b) (x-1)
         
 
 
