@@ -1,6 +1,8 @@
 module Utils where
 
+import qualified Data.Vector as V
 import System.Random as R
+
 
 
 mergeSort :: (a -> a -> Bool) -> [a] -> [a]
@@ -73,4 +75,13 @@ myRandomPermutation l = go l []
             let (xs, y:ys) = splitAt index l
             go (xs ++ ys) (y:acum)
                 
+divideVector :: V.Vector a -> Int -> [V.Vector a]
+divideVector v n = reverse $ go v n []
+    where
+        go :: V.Vector a -> Int -> [V.Vector a] -> [V.Vector a]
+        go v n acum
+            | V.null v = acum
+            | otherwise = go rem n (seg : acum)
+                where
+                    (seg, rem) = V.splitAt n v
 
