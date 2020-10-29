@@ -192,6 +192,16 @@ searchValue board value = go (getTiles board) 0 value
             | index == V.length tiles = Nothing
             | (isNode $ tiles V.! index) && (getValue (tiles V.! index) == value) = Just $ tiles V.! index
             | otherwise = go tiles (index + 1) value
+
+
+rotateBoard :: Board -> Board
+rotateBoard board = Board (V.fromList [r V.! i  | i <- (enumFromThenTo (rowLen-1) (rowLen-2) 0), r <- rows]) (colLen)
+    where
+        tiles = getTiles board
+        rowLen = getColumns board
+        colLen = div (V.length tiles) rowLen
+        rows = divideVector tiles rowLen 
+    
         
 
 
