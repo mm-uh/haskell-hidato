@@ -12,6 +12,7 @@ data Board = Board
         getColumns :: Int
     } deriving Show
 
+data BoardTile = Empty Int | Value Int Int deriving Show
 
 instance Ord BoardTile where
     t1 <= t2 = (<=) (getIndex t1) (getIndex t2)
@@ -20,11 +21,7 @@ instance Eq BoardTile where
     t1 == t2 = (==) (getIndex t1) (getIndex t2)
 
 
-data BoardTile = Empty Int | Value Int Int deriving Show
 
-
-newValue :: Int -> Int -> BoardTile
-newValue = Value
 
 isLeftBorder :: Board -> BoardTile -> Bool
 isLeftBorder board t 
@@ -41,6 +38,7 @@ isRightBorder board t
     where
         columns = getColumns board
         index = getIndex t
+
 getPos :: Board -> Int -> (Int, Int)
 getPos board index = (row, col)
     where 
@@ -67,11 +65,6 @@ isNode _         = True
 isOutside :: BoardTile -> Bool
 isOutside (Empty _) = True
 isOutside _ = False
-
-isInside :: BoardTile -> Bool
-isInside (Empty _) = True
-isInside _ = False
-
 
 validPos :: Board -> (Int, Int) -> Bool
 validPos board (row, col) = row >= 0 && row < colLen && col >= 0 && col < rowLen

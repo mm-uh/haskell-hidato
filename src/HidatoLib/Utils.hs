@@ -39,17 +39,6 @@ dropLast [x]  = []
 dropLast (x:xs) = x : (dropLast xs)
 
 
-takeNRandoms :: Int -> [a] -> IO [a]
-takeNRandoms n l = go n l []
-    where
-        go :: Int -> [a] -> [a] -> IO [a]
-        go 0 l acum = return $ acum
-        go n l acum = do
-            r <- (R.randomRIO (0, (length l) - 1) :: IO Int)
-            let (xs, ys) = splitAt r l
-            go (n-1) (xs ++ (tail ys)) ((head ys):acum) 
-
-
 areConsecutive :: Int -> Int -> Bool
 areConsecutive x y = abs (x-y) == 1
 

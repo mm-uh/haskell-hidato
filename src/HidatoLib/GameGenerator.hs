@@ -16,9 +16,6 @@ gameGenerator board = do
     path <- randomizePathNTimes board times $ computePathForBoard board
     let numberedTiles = assignNumbersToPath path
     let board2 = updateBoardValues board numberedTiles 
-    -- let board2 = updateBoardValues board numberedBoard
-    -- let firstAndLast = [head numberedTiles, last numberedTiles]
-    -- let board2 = updateBoardValues board firstAndLast
     let optionalCells = init . tail $ numberedTiles
     randomPer <- myRandomPermutation optionalCells
     return $ removePosibles board2 randomPer 

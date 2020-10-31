@@ -1,0 +1,210 @@
+\documentclass[12pt]{article}
+
+%===================================================================================
+% Paquetes
+%----------------------------------------------------------
+\usepackage{textcomp}
+\usepackage[x11names,table]{color}
+% \topmargin=-2cm
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{hyperref}
+\usepackage{listings} \lstset {language = Haskell, basicstyle=\bfseries\ttfamily, keywordstyle = \color{blue}, commentstyle = \bf\color{gray}}
+
+
+% \textheight=20cm
+% \textwidth=18cm
+% \oddsidemargin=-1cm
+
+\usepackage{xcolor}
+% \textheight=27cm
+
+% opening
+\title{Proyecto de Programaci\'on Declarativa}
+\author{Mauricio L. Perdomo Cort\'es \and Marcos Antonio Maceo Reyes}
+
+% 
+% 
+\begin{document}
+\vspace{8.cm}
+
+\maketitle
+
+\begin{center}
+    Facultad de Matem\'atica y Computaci\'on\\\vspace{0.2cm} Universidad de La Habana
+\end{center}
+
+\clearpage
+
+% \tableofcontents
+\newpage
+
+\section{Orientaci\'on}
+\raggedright
+\textsc{\textbf{Sudoku Hidato:}}\\\vspace{0.5cm}
+El proyecto tiene dos objetivos generales:
+\begin{itemize}
+	\item Crear un programa en Haskell que dado un Hidato con algunas casillas anotadas sea capaz de darle soluci\'on.
+	\item Crear un programa en Haskell que sea capaz de generar Hidatos.	
+\end{itemize}
+
+
+
+\raggedright
+
+\section{Ideas generales}
+A continuaci\'on est\'an explicadas diferentes ideas y conceptos que est\'an presentes
+en la soluci\'on del ejercicio:
+\begin{itemize}
+	\item {\bf Board:}\newline
+		Un tablero o {\bf Board} es el tipo que representa los distintos Hidatos en nuestro programa. Este tipo est\'a conformado
+		por el {\bf data constructor Board} que recibe dos argumentos uno de tipo {\bf Data.Vector BoardTile} y otro de tipo {\bf Int}.
+		Los tableros estan compuestos por un {\bf Vector BoardTile} (el tipo {\bf BoardTile} ser\'a explicado m\'as adelante) que representa
+		las celdas del tablero y un {\bf Int} que represta el largo de una fila. Los tableros son rectangulares por lo tanto la cantidad de
+		elementos en el vector siempre es un m\'ultiplo de la longitud de la fila.
+	\item {\bf BoardTile:}\newline
+		{\bf BoardTile} es el tipo que representa cada celda del tablero o {\bf Board}. Este tipo es la "suma" de dos {\bf data constructors Empty} y {\bf Value},
+		el primero recibe un {\bf Int} que representa el \'indice del {\bf Vector} del tablero donde se encuentra esta celda, los valores creados con este constructor
+		representan las celdas del tablero que no tienen que ver como tal con el Hidato. El segundo ({\bf Value}) recibe dos argumentos de tipo {\bf Int} el primero tiene
+		la misma funci\'on que el primero de {\bf Empty}, el segundo representa el valor de esta celda, en el caso de que este valor sea 0 significa que la celda no tiene n\'umero
+		asignado, este constructor se usa para crear las celdas que s\'i forman parte del puzzle.
+	\item {\bf Template:}\newline
+		Los {\bf templates} son usados para la generaci\'on de tableros, estos constituyen la forma de un tablero, el proceso de generar un tablero consiste en tomar un template y asignarle
+		n\'umeros a algunas de sus casillas de modo tal que exista una \'unica forma de asignar n\'umeros a las celdas vac\'ias (celdas representadas por valores de la forma {\bf Value \_ 0}). M\'as adelante explicamos
+		algunas restricciones establecidas sobre los {\bf templates} para la generaci\'on de tableros.
+	\item {\bf Puzzle:}\newline
+		Cuando mencionamos {\bf puzzle} nos referimos al conjunto de celdas del tablero que tendr\'an n\'umeros cuando el juego haya finalizado, son aquellas celdas que conforman el {\bf Hidato} como tal.	
+\end{itemize}
+\section{M\'odulos.}
+En est\'a secci\'on abordaremos los m\'odulos que conforman nuestra librer\'ia {\bf HidatoLib}
+\subsection{Board}
+En este m\'odulo se encuentran definidos los tipos que representan nuestro tablero, los cuales fueron mencionados anteriormente, a continuaci\'on procederemos a dar una breve
+explicaci\'on de algunas de las funciones que conforman el m\'odulo
+\newline \newline
+{\bf computeNeighbors :: Board -> BoardTile -> [BoardTile]}\newline
+{\it Esta funci\'on recibe un tablero y un celda y nos devuelve una lista con todas las celdas vecinas a esta, incluye las celdas que forman parte del {\bf puzzle} y las que no.}
+\newline \newline
+{\bf updateBoardValues :: Board -> [BoardTiles] -> Board}\newline
+{\it Esta funci\'on recibe un tablero y una lista de celdas y devuelve un nuevo tablero modificando el anterior con las celdas de la lista.}
+\newline \newline
+{\bf randomizePathNTimes :: Board -> Int -> [BoardTile] -> IO [BoardTile]}\newline
+{\it Esta funci\'on juega un papel muy importante en la generaci\'on de tableros, lo que hace es dado un tablero y un camino de celdas en ese tablero, transforma este camino usando una estrategia que llamamos {\bf backbite} que explicaremo
+m\'as adelante. La funci\'on llama N veces a la funci\'on {\bf randmomizePath}}.
+\newline \newline
+{\bf computePathForBoard :: Board -> [BoardTile]}\newline
+{\it Otra funci\'on con un papel primordial en la generaci\'on de tableros, hablaremos de esta con m\'as profundidad en otra secci\'on del informe. La funci\'on recibe un tablero y devuelve un camino que abarca todas las celdas de nuestro {\bf puzzle},
+el tablero debe cumplir las restricciones impuestas a los {\bf templates}. La funci\'on depende enormemente de la funci\'on {\bf nextIndex} de la cual hablaremos m\'as en otra secci\'on.}
+\newline \newline
+{\bf searchValue :: Board -> Int -> Maybe BoardTile}\newline
+{\it Esta funci\'on recibe un tablero y un valor y devuelve la celda del tablero donde est\'a este valor, en caso de que el valor no est\'e en el tablero devuelve {\bf Nothing}.}
+\newline \newline
+{\bf rotateBoard :: Board -> Board}\newline
+{\it Esta funci\'on recibe un tablero y devuelve el tablero rotado 90 grados en contra de las manecillas del reloj.}
+\subsection{Graph}
+En este m\'odulo se encuentran funciones y tipos para interactuar con grafos. Este m\'odulo tiene gran importacia en nuestro solucionador de {\bf Hidatos}.
+\newline \newline
+{\bf type Graph}\newline
+{\it Este es el tipo que usaremos para representar los grafos, es solamente un nuevo nombre para {\bf Map Int (Set BoardTile)}, que vendr\'ia siendo las listas de adyacencia del grafo.}
+\newline \newline
+{\bf fromBoardToGraph :: Board -> Graph}\newline
+{\it Esta funci\'on crea un grafo teniendo en cuenta solo las celdas del {\bf puzzle}. Dos nodos ser\'an adyacentes en el grafo si cumplen que son vecinos en el tablero (esto se obtiene con la funci\'on
+{\bf computeNeighbors} mencionada anteriormente) y son n\'umeros consecutivos \'o si son vecinos en el tablero y uno es 0 y el otro es un nodo que no tiene como vecino a su antecesor y sucesor.}
+\newline \newline
+{\bf searchPathOfN :: Board -> Int -> IntSet -> (Int, Int) -> Maybe [[Int]])}\newline
+{\it Es la funci\'on principal para dar soluci\'on al {\bf Hidato} tambi\'en tiene importancia en la generaci\'on de nuevos {\bf Hidatos}, esta funci\'on dado un tablero, un N y dos celdas del tablero nos devuelve todos los caminos simples
+de longitud N entre ese par de nodos. Abordaremos con mayor profundidad est\'a funci\'on en otra secci\'on.}
+\newline \newline
+\subsection{Parse}
+En este m\'odulo se encuentran las funciones para desde un fichero obtner el tablero o {\bf Board} asociado. Existen dos funciones porque el formato que tiene un template en un fichero es ligeramente
+diferente al formato que tiene un {\bf Hidato}.
+\newline \newline
+{\bf parseBoard :: String -> IO Board}\newline
+{\it Esta funci\'on recibe el nombre de un fichero donde se encuentra un {\bf template} y devuelve un {\bf Board} que lo representa. Para parsear el contenido del fichero dividimos este por l\'ineas y parseamos cada una luego concatenaremos los vectores 
+resultantes para crear el vector que contiene todas las celdas del tablero. Parsear un l\'inea es muy sencillo ya que cada caracter representa una celda y puede ser '-' \'o '0', en el primer caso siginifica quela celda no pertence al {\bf Hidato}, en el segundo caso
+s\'i pertenece.}
+\newline \newline
+{\bf parseGame :: String :: IO Board}\newline
+{\it Esta funci\'on recibe el nombre de un fichero donde se encuentra un {\bf Hidato} y devuelve el {\bf Board} que lo representa, funciona de forma muy parecida a {\bf parseBoard} con la diferencia de que en este caso las celdas de una fila estar\'an separadas por espacios y pueden estar
+conformadas por m\'as de un caracter.}
+\newline \newline
+\subsection{Print}
+En este m\'odulo se encuentran las funciones para obtener el {\bf String} que representa un {\bf Board}.
+\newline \newline
+{\bf printBoard :: Board -> String}\newline
+{\it Esta funci\'on devuelve el {\bf String} que representa el tablero que recibe como argumento, para esto divide el vector que representa al tablero en vectores con el tama\~no de las filas del tablero (recordemos que este valor se pasa como argumento al {\bf data constructor Board}) y obtiene el {\bf String} que representa a cada una de estas filas}.
+\newline \newline
+\subsection{Utils}
+En este m\'odulo se encuentran varias funciones que cumplen prop\'ositos m\'as generales por lo que no fueron puestas en ninguno de los m\'odulos anteriores.
+\newline \newline
+{\bf mergeSort :: (a -> a -> Bool) -> [a] -> [a]}\newline
+{\it Est\'a funci\'on es una implementaci\'on del conocido algoritmo merge sort que recibe la una funci\'on que utilizar\'a para comparar los elementos.}
+\newline \newline
+{\bf groupInN :: Int -> [a] -> [[a]]}\newline
+{\it Esta funci\'on recibe un {\bf Int} N y una lista y divide la lista en varias listas de tama\~no N, es posible que la \'ultima lista no llegue a N elementos.}
+\newline \newline
+{\bf groupConsecutives :: [Int] -> [[Int]]}\newline
+{\it Esta funci\'on recibe una lista y agrupa los valores que sean consecutivos y sean adyancentes en la lista, por ejemplo si le pasamos como argumento {\bf [1,2,3,5,6,9,11,12]} obtendremos {\bf [[1,2,3],[5,6],[9],[11,12]]}.}
+\newline \newline
+{\bf findGaps :: [Int] -> [[Int]]}\newline
+{\it Dada una lista de {\bf Int} encuentra los pares de n\'umeros consecutivos que no tienen sus valores consecutivos, por ejemplo si le pasamos como argumento {\bf [1,2,4,6,7,8,9]} obtendremos {\bf [[2,4], [4,6]]}.}
+\newline \newline
+{\bf myMaybeLiftA2 :: (a -> a -> a) -> Maybe a -> Maybe a -> Maybe a}\newline
+{\it Esta funci\'on es muy similar a liftA2 que se encuentra en Control.Applicative, la razo\'on por la que existe es que el la implementaci\'on de {\bf Applicative} del tipo {\bf Maybe} no funcionaba para nuestro objetivo.}
+\newline \newline
+{\bf divideVector :: Vector a -> Int -> Vector a}\newline
+{\it Esta funci\'on realiza la misma acci\'on que {\bf groupInN} pero aplicada a vectores.}
+
+
+
+
+\section{Generar Hidatos}
+En esta secci\'on explicaremos como generamos {\bf Hidatos}. El proceso que utilizamos para crear un {\bf Hidato} puede resumirse en lo siguiente: tomamos un {\bf template} que cumpla
+determinadas condiciones, creamos un camino sobre este {\bf template}, luego modificamos un poco este camino para que sobre el mismo {\bf template} no se genere siempre el mismo {\bf puzzle} y luego retiramos
+algunos de los n\'umeros. En esta secci\'on abordaremos con m\'as profundidad como ocurren cada uno de los pasos anteriores y al final haremos un peque\~no an\'alisis sobre los pensamientos e ideas que nos llevaron 
+a tomar estas decisiones.
+\subsection{Templates}
+Como observamos en los pasos explicados la generaci\'on de un tablero se basa en un {\bf template}, un {\bf template} es un fichero de texto que contiene la representaci\'on de un tablero, estar\'a representado de forma 
+rectangular y las celdas que formen parte del {\bf puzzle} seran '0' y las que no '-'. Para que el comportamiento del generador sea el esperado el {\bf template} debe cumplir que pueda crearse un camino que abarque todas las 
+celdas del {\bf Hidato} usando la estrategia explicada a continuaci\'on.
+\subsection{Crear el camino}
+El proceso de creaci\'on del camino es el siguiente, se busca la celda que pertenezca al {\bf puzzle} que se encuentre en la menor fila que contenga celdas del {\bf puzzle}, si hay m\'as de una en esta fila se toma la que 
+est\'e m\'as a la izquierda, desde esta celda se avanza hacia la derecha hasta que no exista en la derecha una celda que pertenezca al {\bf Hidato}, en este momento se desplazar\'a hacia la fila inferior a la celda m\'as a la derecha
+que sea vecina de la actual y se repetir\'a el proceso pero esta vez avanzando hacia la izquierda.
+\subsection{Modificar el camino}
+Si sobre un {\bf template} siempre generamos el mismo camino, tendr\'iamos solo un {\bf Hidato} por {\bf template} para solucionar esto decidimos modificar el camino creado, para modificarlo usamos un movimiento conocido como {\bf backbite}(para una mayor informaci\'on sobre esto puede ir a   \url{https://arxiv.org/pdf/cond-mat/0508094.pdf}) el movimiento consiste
+en seleccionar uno de los dos extremos del camino y luego seleccionar uno de los nodos vecinos a este, deben ser vecinos adyacentes a \'el, colocamos una arista entre ambos nodos y luego retiramos del camino la arista mediante la cual el nodo vecino llegaba al nodo extremo elegido,
+por ejemplo supongamos que tenemos el camino [0, 1, ..., i, i+1, i+2, ..., i+n] digamos que el v\'ertice i y el v\'ertice i+n son vecinos nuestro nuevo camino quedar\'iamos
+[0, 1, ..., i, i+n, i+(n-1), i+(n-2), ..., i+1]. Este procedimiento lo realizamos una cantidad aleatoria de veces y terminamos con caminos bastantes aleatorios.
+\subsection{Eliminar n\'umeros del tablero}
+Al llegar a este punto tenemos un tablero con un camino de n\'umeros generados, para tener nuestro {\bf Hidato} debemos quitar alunos de estos n\'umeros garantizando que los n\'umeros que queden gu\'ien \'unicamente a nuestra soluci\'on.
+Para seleccionar los n\'umeros que retiraremos primero obtendremos una permutaci\'on aleatoria del camino de n\'umeros e iremos uno por uno quitando el n\'umero y resolviendo el tablero resultante, si obtenemos m\'as de una soluci\'on esto nos indicar\'a que no podemos eliminar este n\'umero en el caso de que obtengamos una \'unica
+soluci\'on quitaremo este n\'umeros y avanzaremos hacia el pr\'oximo.
+\subsubsection{An\'alisis}
+Consideramos que la soluci\'on ideal ser\'ia poder dar un {\bf Hidato} para cualquier {\bf template} que sea posible, el problema de esto viene dado porque hacer esto es equivalente a encontrar un camino de Hamilton para el grafo que represente al {\bf template}, esto fue lo que nos impuls\'o a restringir los {\bf templates} a algunos sobre los que pudiesemos crear un camino
+"trivial". Para extender un poco la posibilidad de los templates a\~nadimos la opci\'on de rotar un tablero esto nos permite usar {\bf templates} como la flecha que se encuentra en nuestros ejemplos, que para poder ser usada debe construirse de forma horizontal pero luego podemos tener este {\bf puzzle} tanto horizontal como verticalmente. La definici\'on de nuevos caminos "triviales"
+ser\'ia otra forma de ampliar el conjunto de {\bf templates} que se pueden usar.\newline
+La complejidad de nuestro algoritmo para generar tableros puede ser analizada por partes, iremos por cada uno de los procesos explicados anteriormente:
+\begin{itemize}
+	\item Obtener el {\bf Board} que representa a un {\bf template} es {\it O(N)} con N la cantidad de celdas del {\bf template}
+	\item Obtener nuestro camino trivial es {\it O(N)}, modificar un camino es {\it O(N)} tambi\'en dado porque se construye un nuevo camino a partir del anterior. En este caso N reprsenta la cantidad de celdas del {\bf puzzle} que son las que pertenecen al camino. Este proceso se realiza entre dos y tres veces la cantidad de celdas del {\bf template} por lo que si M representa este n\'umero la complejidad total
+	de "randomizar" nuestro camino ser\'ia {\it O(M*N)}.
+	\item Eliminar n\'umeros de nuestro {\bf puzzle} es la parte m\'as costosa de nuestro algoritmo, esto viene dado por la necesidad de que el tablero final tenga soluci\'on \'unica, como vimos para esto solucionamos el {\bf Hidato} que queda al retirar cada una de las celdas del camino, como veremos a continuaci\'on resolver un {\bf Hidato} tiene una complejidad exponencial con respecto al tama\~no de la entrada.
+\end{itemize}
+
+\section{Resolver Hidatos}
+Esta es la \'ultima secci\'on de nuestro informe, aqu\'i abordaremos el proceso que seguimos para resolver los {\bf Hidatos}.
+\newline
+Como hemos mencionado anteriormente podemos ver que solucionar un {\bf Hidato} es equivalente a encontrar un camino de Hamilton en el grafo que representa al {\bf puzzle} con la diferencia de que sabemos la posici\'on en el camino de algunos de los nodos.
+Sabemos que no tenemos una soluci\'on a este problema mucho mejor que la fuerza bruta, por lo que nuestra soluci\'on ser\'a realizar un Backtrack buscando todos los caminos posibles, realizando algunas decisiones que nos permitan reducir los caminos err\'oneos que tomamos.
+Para resolver un {\bf Hidato} dado primero buscaremos todos los "gaps" de nuestro {\bf puzzle}, llamamos "gap" a los conjuntos de n\'umeros consecutivos que deben estar en el tablero pero que actualmente no existen, estos "gaps" son los conjuntos de n\'umeros que nostros debemos colocar
+para resolver el {\bf Hidato}. Ahora poemos plantear nuestra soluci\'on como la combinaci\'on de soluciones de cada uno de los "gaps" siempre que no exista intersecci\'on entre estas dos a dos. Para resolver un "gap" lo que haremos ser\'a aplicar la funci\'on {\bf searchPathOfN} que nos devolver\'a una lista
+con todos los caminos de longitud {\it N} entre dos celdas que le digamos y que sean posibles en el {\bf Hidato} actual. Para resolver nuestro {\bf Hidato} ordenaremos los "gaps" por cardinalidad para atacar primeramente a los menores, esto se debe a que el algoritmo para resolver un "gap" es un backtrack con DFS que crece exponencialmente con 
+respecto a la longitud del camino que buscamos y mientras mas "gaps" est\'en resultos antes menos celdas posibles hay para buscar los caminos, luego por cada una de las soluciones obtenidas para este "gap" intentaremos resolver los "gaps" restantes con el {\bf puzzle} resultante de utilizar esta soluci\'on.
+
+
+\end{document}

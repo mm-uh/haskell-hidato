@@ -21,7 +21,7 @@ solve' :: [[BoardTile]] -> Board -> Maybe [Board]
 solve' [] board = Just [board]
 solve' (x:xs) board
     | isNothing paths = Nothing
-    | otherwise = foldr (myMaybeLiftA (++)) Nothing $ solve' xs <$> map (updateBoardValues board) (map (zipWith (flip $ newValue) (enumFromThenTo lastValue (lastValue -1 ) startValue)) (fromJust paths) )
+    | otherwise = foldr (myMaybeLiftA (++)) Nothing $ solve' xs <$> map (updateBoardValues board) (map (zipWith (flip $ Value) (enumFromThenTo lastValue (lastValue -1 ) startValue)) (fromJust paths) )
     where
         paths = solveGap board x
         [startValue, lastValue] = map getValue  x 

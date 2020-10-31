@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section.1}{Orientaci\363n}{}% 1
+\BOOKMARK [1][-]{section.2}{Ideas generales}{}% 2
+\BOOKMARK [1][-]{section.3}{M\363dulos.}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Board}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Graph}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Parse}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Print}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{Utils}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Generar Hidatos}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Templates}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Crear el camino}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Modificar el camino}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.4}{Eliminar n\372meros del tablero}{section.4}% 13
+\BOOKMARK [3][-]{subsubsection.4.4.1}{An\341lisis}{subsection.4.4}% 14
+\BOOKMARK [1][-]{section.5}{Resolver Hidatos}{}% 15
