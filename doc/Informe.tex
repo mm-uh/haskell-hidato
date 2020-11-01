@@ -65,7 +65,7 @@ en la soluci\'on del ejercicio:
 		Un tablero o {\bf Board} es el tipo que representa los distintos Hidatos en nuestro programa. Este tipo est\'a conformado
 		por el {\bf data constructor Board} que recibe dos argumentos uno de tipo {\bf Data.Vector BoardTile} y otro de tipo {\bf Int}.
 		Los tableros estan compuestos por un {\bf Vector BoardTile} (el tipo {\bf BoardTile} ser\'a explicado m\'as adelante) que representa
-		las celdas del tablero y un {\bf Int} que represta el largo de una fila. Los tableros son rectangulares por lo tanto la cantidad de
+		las celdas del tablero y un {\bf Int} que representa el largo de una fila. Los tableros son rectangulares por lo tanto la cantidad de
 		elementos en el vector siempre es un m\'ultiplo de la longitud de la fila.
 	\item {\bf BoardTile:}\newline
 		{\bf BoardTile} es el tipo que representa cada celda del tablero o {\bf Board}. Este tipo es la "suma" de dos {\bf data constructors Empty} y {\bf Value},
@@ -81,7 +81,7 @@ en la soluci\'on del ejercicio:
 		Cuando mencionamos {\bf puzzle} nos referimos al conjunto de celdas del tablero que tendr\'an n\'umeros cuando el juego haya finalizado, son aquellas celdas que conforman el {\bf Hidato} como tal.	
 \end{itemize}
 \section{M\'odulos.}
-En est\'a secci\'on abordaremos los m\'odulos que conforman nuestra librer\'ia {\bf HidatoLib}
+En esta secci\'on abordaremos los m\'odulos que conforman nuestra librer\'ia {\bf HidatoLib}
 \subsection{Board}
 En este m\'odulo se encuentran definidos los tipos que representan nuestro tablero, los cuales fueron mencionados anteriormente, a continuaci\'on procederemos a dar una breve
 explicaci\'on de algunas de las funciones que conforman el m\'odulo
@@ -93,7 +93,7 @@ explicaci\'on de algunas de las funciones que conforman el m\'odulo
 {\it Esta funci\'on recibe un tablero y una lista de celdas y devuelve un nuevo tablero modificando el anterior con las celdas de la lista.}
 \newline \newline
 {\bf randomizePathNTimes :: Board -> Int -> [BoardTile] -> IO [BoardTile]}\newline
-{\it Esta funci\'on juega un papel muy importante en la generaci\'on de tableros, lo que hace es dado un tablero y un camino de celdas en ese tablero, transforma este camino usando una estrategia que llamamos {\bf backbite} que explicaremo
+{\it Esta funci\'on juega un papel muy importante en la generaci\'on de tableros, lo que hace es dado un tablero y un camino de celdas en ese tablero, transforma este camino usando una estrategia que llamamos {\bf backbite} que explicaremos
 m\'as adelante. La funci\'on llama N veces a la funci\'on {\bf randmomizePath}}.
 \newline \newline
 {\bf computePathForBoard :: Board -> [BoardTile]}\newline
@@ -104,9 +104,9 @@ el tablero debe cumplir las restricciones impuestas a los {\bf templates}. La fu
 {\it Esta funci\'on recibe un tablero y un valor y devuelve la celda del tablero donde est\'a este valor, en caso de que el valor no est\'e en el tablero devuelve {\bf Nothing}.}
 \newline \newline
 {\bf rotateBoard :: Board -> Board}\newline
-{\it Esta funci\'on recibe un tablero y devuelve el tablero rotado 90 grados en contra de las manecillas del reloj.}
+{\it Esta funci\'on recibe un tablero y devuelve el tablero rotado 90 grados en sentido contrario de las manecillas del reloj.}
 \subsection{Graph}
-En este m\'odulo se encuentran funciones y tipos para interactuar con grafos. Este m\'odulo tiene gran importacia en nuestro solucionador de {\bf Hidatos}.
+En este m\'odulo se encuentran funciones y tipos para interactuar con grafos. Este m\'odulo tiene gran importancia en nuestro solucionador de {\bf Hidatos}.
 \newline \newline
 {\bf type Graph}\newline
 {\it Este es el tipo que usaremos para representar los grafos, es solamente un nuevo nombre para {\bf Map Int (Set BoardTile)}, que vendr\'ia siendo las listas de adyacencia del grafo.}
@@ -125,7 +125,7 @@ diferente al formato que tiene un {\bf Hidato}.
 \newline \newline
 {\bf parseBoard :: String -> IO Board}\newline
 {\it Esta funci\'on recibe el nombre de un fichero donde se encuentra un {\bf template} y devuelve un {\bf Board} que lo representa. Para parsear el contenido del fichero dividimos este por l\'ineas y parseamos cada una luego concatenaremos los vectores 
-resultantes para crear el vector que contiene todas las celdas del tablero. Parsear un l\'inea es muy sencillo ya que cada caracter representa una celda y puede ser '-' \'o '0', en el primer caso siginifica quela celda no pertence al {\bf Hidato}, en el segundo caso
+resultantes para crear el vector que contiene todas las celdas del tablero. Parsear un l\'inea es muy sencillo ya que cada caracter representa una celda y puede ser '-' \'o '0', en el primer caso significa que la celda no pertence al {\bf Hidato}, en el segundo caso
 s\'i pertenece.}
 \newline \newline
 {\bf parseGame :: String :: IO Board}\newline
@@ -181,7 +181,7 @@ en seleccionar uno de los dos extremos del camino y luego seleccionar uno de los
 por ejemplo supongamos que tenemos el camino [0, 1, ..., i, i+1, i+2, ..., i+n] digamos que el v\'ertice i y el v\'ertice i+n son vecinos nuestro nuevo camino quedar\'iamos
 [0, 1, ..., i, i+n, i+(n-1), i+(n-2), ..., i+1]. Este procedimiento lo realizamos una cantidad aleatoria de veces y terminamos con caminos bastantes aleatorios.
 \subsection{Eliminar n\'umeros del tablero}
-Al llegar a este punto tenemos un tablero con un camino de n\'umeros generados, para tener nuestro {\bf Hidato} debemos quitar alunos de estos n\'umeros garantizando que los n\'umeros que queden gu\'ien \'unicamente a nuestra soluci\'on.
+Al llegar a este punto tenemos un tablero con un camino de n\'umeros generados, para tener nuestro {\bf Hidato} debemos quitar algunos de estos n\'umeros garantizando que los n\'umeros que queden gu\'ien \'unicamente a nuestra soluci\'on.
 Para seleccionar los n\'umeros que retiraremos primero obtendremos una permutaci\'on aleatoria del camino de n\'umeros e iremos uno por uno quitando el n\'umero y resolviendo el tablero resultante, si obtenemos m\'as de una soluci\'on esto nos indicar\'a que no podemos eliminar este n\'umero en el caso de que obtengamos una \'unica
 soluci\'on quitaremo este n\'umeros y avanzaremos hacia el pr\'oximo.
 \subsubsection{An\'alisis}
@@ -201,8 +201,8 @@ Esta es la \'ultima secci\'on de nuestro informe, aqu\'i abordaremos el proceso 
 \newline
 Como hemos mencionado anteriormente podemos ver que solucionar un {\bf Hidato} es equivalente a encontrar un camino de Hamilton en el grafo que representa al {\bf puzzle} con la diferencia de que sabemos la posici\'on en el camino de algunos de los nodos.
 Sabemos que no tenemos una soluci\'on a este problema mucho mejor que la fuerza bruta, por lo que nuestra soluci\'on ser\'a realizar un Backtrack buscando todos los caminos posibles, realizando algunas decisiones que nos permitan reducir los caminos err\'oneos que tomamos.
-Para resolver un {\bf Hidato} dado primero buscaremos todos los "gaps" de nuestro {\bf puzzle}, llamamos "gap" a los conjuntos de n\'umeros consecutivos que deben estar en el tablero pero que actualmente no existen, estos "gaps" son los conjuntos de n\'umeros que nostros debemos colocar
-para resolver el {\bf Hidato}. Ahora poemos plantear nuestra soluci\'on como la combinaci\'on de soluciones de cada uno de los "gaps" siempre que no exista intersecci\'on entre estas dos a dos. Para resolver un "gap" lo que haremos ser\'a aplicar la funci\'on {\bf searchPathOfN} que nos devolver\'a una lista
+Para resolver un {\bf Hidato} dado primero buscaremos todos los "gaps" de nuestro {\bf puzzle}, llamamos "gap" a los conjuntos de n\'umeros consecutivos que deben estar en el tablero pero que actualmente no existen, estos "gaps" son los conjuntos de n\'umeros que nosotros debemos colocar
+para resolver el {\bf Hidato}. Ahora podemos plantear nuestra soluci\'on como la combinaci\'on de soluciones de cada uno de los "gaps" siempre que no exista intersecci\'on entre estas dos a dos. Para resolver un "gap" lo que haremos ser\'a aplicar la funci\'on {\bf searchPathOfN} que nos devolver\'a una lista
 con todos los caminos de longitud {\it N} entre dos celdas que le digamos y que sean posibles en el {\bf Hidato} actual. Para resolver nuestro {\bf Hidato} ordenaremos los "gaps" por cardinalidad para atacar primeramente a los menores, esto se debe a que el algoritmo para resolver un "gap" es un backtrack con DFS que crece exponencialmente con 
 respecto a la longitud del camino que buscamos y mientras mas "gaps" est\'en resultos antes menos celdas posibles hay para buscar los caminos, luego por cada una de las soluciones obtenidas para este "gap" intentaremos resolver los "gaps" restantes con el {\bf puzzle} resultante de utilizar esta soluci\'on.
 
