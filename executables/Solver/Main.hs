@@ -32,5 +32,5 @@ versionOption = infoOption "Hidato Version 0.1" (long "version" <> help "Show ve
 programOptions :: Parser Opts
 programOptions =
     Opts <$> strOption
-        (long "file" <> metavar "VALUE" <> value "elipse" <>
+        (long "file" <> metavar "VALUE" <> value "board" <>
          help "file with generated hidato")
