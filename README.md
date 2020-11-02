@@ -1,4 +1,4 @@
-#Hidato
+# Hidato
 
 Este repositorio representa la respuesta a un proyecto de clases referente a la asignatura de `Programación Declarativa` de el curso de 4to año de la carrera `Ciencias de la Computación` pertenecientes a la `Universidad de la Habana`.
 
@@ -8,7 +8,7 @@ El proyecto tiene 2 objetivos generales:
 * Crear un programa en Haskell que dado un Hidato con algunas casillas anotadas sea capaz de darle solución.
 * Crear un programa en Haskell que sea capaz de resolver Hidatos.
 
-## Como se usa
+## Cómo usarlo 
 
 Antes de poder usar nuestra aplicación es necesario tener instalado `cabal`, una herramienta para compilar aplicaciones hechas en Haskell. Una vez contamos con `cabal` debemos correr el siguiente comando para poder usar nuestra aplicación:
 ```
