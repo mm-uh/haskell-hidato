@@ -69,7 +69,7 @@ en la soluci\'on del ejercicio:
 		elementos en el vector siempre es un m\'ultiplo de la longitud de la fila.
 	\item {\bf BoardTile:}\newline
 		{\bf BoardTile} es el tipo que representa cada celda del tablero o {\bf Board}. Este tipo es la "suma" de dos {\bf data constructors Empty} y {\bf Value},
-		el primero recibe un {\bf Int} que representa el \'indice del {\bf Vector} del tablero donde se encuentra esta celda, los valores creados con este constructor
+		el primero recibe un {\bf Int} que representa el \'indice en el {\bf Vector} del tablero donde se encuentra esta celda, los valores creados con este constructor
 		representan las celdas del tablero que no tienen que ver como tal con el Hidato. El segundo ({\bf Value}) recibe dos argumentos de tipo {\bf Int} el primero tiene
 		la misma funci\'on que el primero de {\bf Empty}, el segundo representa el valor de esta celda, en el caso de que este valor sea 0 significa que la celda no tiene n\'umero
 		asignado, este constructor se usa para crear las celdas que s\'i forman parte del puzzle.
@@ -172,7 +172,7 @@ Como observamos en los pasos explicados la generaci\'on de un tablero se basa en
 rectangular y las celdas que formen parte del {\bf puzzle} seran '0' y las que no '-'. Para que el comportamiento del generador sea el esperado el {\bf template} debe cumplir que pueda crearse un camino que abarque todas las 
 celdas del {\bf Hidato} usando la estrategia explicada a continuaci\'on.
 \subsection{Crear el camino}
-El proceso de creaci\'on del camino es el siguiente, se busca la celda que pertenezca al {\bf puzzle} que se encuentre en la menor fila que contenga celdas del {\bf puzzle}, si hay m\'as de una en esta fila se toma la que 
+El proceso de creaci\'on del camino es el siguiente, se busca la celda que pertenezca al {\bf puzzle} que se encuentre en la fila m\'as cercana al borde superior que contenga celdas del {\bf puzzle}, si hay m\'as de una en esta fila se toma la que 
 est\'e m\'as a la izquierda, desde esta celda se avanza hacia la derecha hasta que no exista en la derecha una celda que pertenezca al {\bf Hidato}, en este momento se desplazar\'a hacia la fila inferior a la celda m\'as a la derecha
 que sea vecina de la actual y se repetir\'a el proceso pero esta vez avanzando hacia la izquierda.
 \subsection{Modificar el camino}
@@ -183,7 +183,7 @@ por ejemplo supongamos que tenemos el camino [0, 1, ..., i, i+1, i+2, ..., i+n] 
 \subsection{Eliminar n\'umeros del tablero}
 Al llegar a este punto tenemos un tablero con un camino de n\'umeros generados, para tener nuestro {\bf Hidato} debemos quitar algunos de estos n\'umeros garantizando que los n\'umeros que queden gu\'ien \'unicamente a nuestra soluci\'on.
 Para seleccionar los n\'umeros que retiraremos primero obtendremos una permutaci\'on aleatoria del camino de n\'umeros e iremos uno por uno quitando el n\'umero y resolviendo el tablero resultante, si obtenemos m\'as de una soluci\'on esto nos indicar\'a que no podemos eliminar este n\'umero en el caso de que obtengamos una \'unica
-soluci\'on quitaremo este n\'umeros y avanzaremos hacia el pr\'oximo.
+soluci\'on quitaremos este n\'umeros y avanzaremos hacia el pr\'oximo.
 \subsubsection{An\'alisis}
 Consideramos que la soluci\'on ideal ser\'ia poder dar un {\bf Hidato} para cualquier {\bf template} que sea posible, el problema de esto viene dado porque hacer esto es equivalente a encontrar un camino de Hamilton para el grafo que represente al {\bf template}, esto fue lo que nos impuls\'o a restringir los {\bf templates} a algunos sobre los que pudiesemos crear un camino
 "trivial". Para extender un poco la posibilidad de los templates a\~nadimos la opci\'on de rotar un tablero esto nos permite usar {\bf templates} como la flecha que se encuentra en nuestros ejemplos, que para poder ser usada debe construirse de forma horizontal pero luego podemos tener este {\bf puzzle} tanto horizontal como verticalmente. La definici\'on de nuevos caminos "triviales"

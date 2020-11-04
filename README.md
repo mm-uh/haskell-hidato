@@ -1,6 +1,6 @@
 # Hidato
 
-Este repositorio representa la respuesta a un proyecto de clases referente a la asignatura de `Programación Declarativa` de el curso de 4to año de la carrera `Ciencias de la Computación` pertenecientes a la `Universidad de la Habana`.
+Este repositorio representa la respuesta a un proyecto de clases referente a la asignatura de `Programación Declarativa` del curso de 4to año de la carrera `Ciencias de la Computación` pertenecientes a la `Universidad de la Habana`.
 
 ## Objetivos
 
@@ -10,11 +10,12 @@ El proyecto tiene 2 objetivos generales:
 
 ## Cómo usarlo 
 
-Antes de poder usar nuestra aplicación es necesario tener instalado `cabal`, una herramienta para compilar aplicaciones hechas en Haskell. Una vez contamos con `cabal` debemos correr el siguiente comando para poder usar nuestra aplicación:
+Antes de poder usar nuestra aplicación es necesario tener instalado `cabal`, una herramienta para compilar aplicaciones hechas en Haskell. Una vez contamos con `cabal` debemos correr los siguiente comando para poder usar nuestra aplicación:
 ```
+cabal install
 cabal build
 ```
-Esto compilará los dos modulos principales que hacen uso de nuestra librería `HidatoLib` que es la que contiene la solución a los ejercicios popuestos en este trabajo. Estos módulos son:
+Esto instalará las dependencias necesarias y compilará los dos modulos principales que hacen uso de nuestra librería `HidatoLib` que es la que contiene la solución a los ejercicios popuestos en este trabajo. Estos módulos son:
 * Generador
 * Solucionador 
 
@@ -54,6 +55,13 @@ Available options:
   -h,--help                Show this help text
   --version                Show version
   --file VALUE             file with generated hidato
+```
+
+### Ejemplo
+Lo siguiente genera un tablero usando el tamplate arrow y busca la solución este:
+```
+cabal run Generator -- --template templates/side-arrow.txt --board_name arrow.txt --rotate 1
+cabal run Solver -- --file arrow.txt
 ```
 
 ## Otros
